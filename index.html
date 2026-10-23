@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Guest Book - AITTA Travel MArt. Sumbar 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome untuk Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QRCode.js untuk generate QR -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
+    
+    <!-- PERBAIKAN: Menambahkan type="text/tailwindcss" agar @apply berfungsi -->
+    <style type="text/tailwindcss">
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
@@ -24,11 +24,11 @@
         }
 
         .input-field {
-            @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 bg-gray-50 text-gray-900;
+            @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 bg-gray-50 text-black;
         }
 
         .label-text {
-            @apply block text-sm font-semibold text-gray-700 mb-1 ml-1;
+            @apply block text-sm font-semibold text-black mb-1 ml-1;
         }
 
         .loader {
@@ -144,7 +144,7 @@
             </div>
         </div>
 
-        <!-- Success Section (Hidden initially) -->
+        <!-- Success Section -->
         <div id="success-container" class="hidden bg-white rounded-2xl shadow-2xl overflow-hidden minang-border transition-all duration-500 transform scale-95 opacity-0">
             <div class="p-8 text-center flex flex-col items-center">
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -156,14 +156,12 @@
                 
                 <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 w-full flex flex-col items-center shadow-inner mb-6">
                     <p class="text-sm text-gray-500 font-semibold mb-3 uppercase tracking-wider">Tiket Digital Anda</p>
-                    <!-- QR Code akan di render di sini -->
                     <div id="qrcode-box" class="p-2 bg-white rounded-lg shadow-sm border border-gray-100"></div>
                     <p id="ticket-id" class="text-xs text-gray-400 mt-3 font-mono"></p>
                 </div>
 
                 <p class="text-sm text-gray-500">Tunjukkan QR Code ini kepada panitia di meja registrasi.</p>
                 
-                <!-- Tombol Kembali jika ingin daftar tamu lain -->
                 <button onclick="resetForm()" class="mt-6 text-red-600 text-sm font-semibold hover:text-red-800 transition-colors">
                     Daftar Tamu Lain
                 </button>
@@ -174,10 +172,8 @@
 
     <!-- Script Google Sheets Connection -->
     <script>
-        // GANTI STRING DI BAWAH DENGAN URL WEB APP DARI GOOGLE APPS SCRIPT ANDA
-        const scriptURL = 'MASUKKAN_URL_WEB_APP_DI_SINI'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyamU1wGPaItrMsrsmNtkvN0Suc4bLvLaQbgKuryIg2KVI8f6yC4iWSoRI1xCu996k5/exec'; 
         
-        // DOM Elements
         const form = document.getElementById('registration-form');
         const formContainer = document.getElementById('form-container');
         const successContainer = document.getElementById('success-container');
@@ -186,30 +182,23 @@
         const errorMsg = document.getElementById('error-msg');
         const qrCodeBox = document.getElementById('qrcode-box');
 
-        // Form Submit Handler
         form.addEventListener('submit', e => {
             e.preventDefault();
             
-            // Validasi URL Script
-            if (scriptURL === 'https://script.google.com/macros/s/AKfycbyamU1wGPaItrMsrsmNtkvN0Suc4bLvLaQbgKuryIg2KVI8f6yC4iWSoRI1xCu996k5/exec) {
+            if (scriptURL === 'MASUKKAN_URL_WEB_APP_DI_SINI') {
                 showError("Error: Anda belum memasukkan URL Google Script di dalam file HTML.");
                 return;
             }
 
             const guestName = document.getElementById('name').value.trim();
-            
-            // Generate QR ID unik: "ATM26" + 6 digit timestamp akhir + angka acak
             const qrId = 'ATM26-' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 100);
 
-            // Menyiapkan data
             let formData = new FormData(form);
             formData.append('qr_id', qrId);
 
-            // Loading state
             setLoading(true);
             hideError();
 
-            // Mengirim data ke Google Sheets
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(response => {
                     showSuccessUI(guestName, qrId);
@@ -217,8 +206,6 @@
                 })
                 .catch(error => {
                     console.error('Error!', error.message);
-                    // Catatan: Google Script terkadang melempar CORS error meskipun data berhasil masuk.
-                    // Oleh karena itu, kita tetap menampilkan success UI meskipun masuk ke blok catch ini.
                     showSuccessUI(guestName, qrId);
                     setLoading(false);
                 });
@@ -246,7 +233,6 @@
         }
 
         function showSuccessUI(guestName, documentId) {
-            // Animasi transisi
             formContainer.classList.remove('scale-100', 'opacity-100');
             formContainer.classList.add('scale-95', 'opacity-0');
             
@@ -254,30 +240,26 @@
                 formContainer.classList.add('hidden');
                 successContainer.classList.remove('hidden');
                 
-                // Trigger reflow biar animasi masuk sukses
                 void successContainer.offsetWidth; 
 
                 successContainer.classList.remove('scale-95', 'opacity-0');
                 successContainer.classList.add('scale-100', 'opacity-100');
 
-                // Set Nama
                 document.getElementById('display-name').textContent = guestName;
                 document.getElementById('ticket-id').textContent = `ID: ${documentId}`;
 
-                // Generate QR Code
-                qrCodeBox.innerHTML = ''; // Bersihkan QR sebelumnya jika ada
+                qrCodeBox.innerHTML = ''; 
                 new QRCode(qrCodeBox, {
-                    text: documentId, // Menyimpan ID QR code unik
+                    text: documentId,
                     width: 180,
                     height: 180,
                     colorDark : "#000000",
                     colorLight : "#ffffff",
                     correctLevel : QRCode.CorrectLevel.H
                 });
-            }, 300); // Tunggu animasi form selesai
+            }, 300); 
         }
 
-        // Fungsi Reset Form
         window.resetForm = function() {
             form.reset();
             
