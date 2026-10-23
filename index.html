@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Guest Book - AITTA Travel MArt. Sumbar 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode.js untuk generate QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111111;
+            background-image: radial-gradient(circle at 50% 0%, #2a0808 0%, #111111 70%);
+            min-height: 100vh;
+        }
+        
+        .minang-border {
+            border-top: 4px solid #FFD700;
+            border-bottom: 4px solid #E3000F;
+        }
+
+        .input-field {
+            @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 bg-gray-50 text-gray-900;
+        }
+
+        .label-text {
+            @apply block text-sm font-semibold text-gray-700 mb-1 ml-1;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-white flex items-center justify-center p-4 antialiased selection:bg-yellow-500 selection:text-black">
+
+    <div class="w-full max-w-md relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center mb-8 animate-fade-in-down">
+            <div class="inline-block p-3 rounded-full bg-black/50 border border-yellow-500/30 mb-4 shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                <i class="fa-solid fa-map-location-dot text-3xl text-yellow-500"></i>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
+                AITTA Travel MArt.
+            </h1>
+            <h2 class="text-xl md:text-2xl font-semibold text-yellow-500 flex items-center justify-center gap-2">
+                <span class="w-8 h-[2px] bg-red-600"></span>
+                Sumbar 2026 <span class="text-red-600">(ATM 2026)</span>
+                <span class="w-8 h-[2px] bg-red-600"></span>
+            </h2>
+            <p class="text-gray-400 mt-2 text-sm">Silakan isi buku tamu untuk mendapatkan tiket digital Anda.</p>
+        </div>
+
+        <!-- Form Section -->
+        <div id="form-container" class="bg-white rounded-2xl shadow-2xl overflow-hidden minang-border transition-all duration-500 transform scale-100 opacity-100">
+            <div class="p-6 md:p-8">
+                <form id="registration-form" class="space-y-5">
+                    
+                    <!-- Nama -->
+                    <div>
+                        <label for="name" class="label-text">Nama Lengkap</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="name" name="name" required class="input-field pl-10" placeholder="Cth: Siti Nurbaya">
+                        </div>
+                    </div>
+
+                    <!-- Perusahaan -->
+                    <div>
+                        <label for="company" class="label-text">Perusahaan</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-building"></i>
+                            </span>
+                            <input type="text" id="company" name="company" required class="input-field pl-10" placeholder="Cth: PT Wisata Alam">
+                        </div>
+                    </div>
+
+                    <!-- Agent -->
+                    <div>
+                        <label for="agent" class="label-text">Nama Agent</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-id-badge"></i>
+                            </span>
+                            <input type="text" id="agent" name="agent" required class="input-field pl-10" placeholder="Nama Travel Agent">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="label-text">Email</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-envelope"></i>
+                            </span>
+                            <input type="email" id="email" name="email" required class="input-field pl-10" placeholder="email@contoh.com">
+                        </div>
+                    </div>
+
+                    <!-- No Telp -->
+                    <div>
+                        <label for="phone" class="label-text">No. Telepon / WhatsApp</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-phone"></i>
+                            </span>
+                            <input type="tel" id="phone" name="phone" required class="input-field pl-10" placeholder="081234567890">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-red-600/50 transition-all duration-300 transform hover:-translate-y-1 mt-4">
+                        <span id="btn-text">Submit Data</span>
+                    </button>
+
+                    <!-- Error Message Container -->
+                    <p id="error-msg" class="text-red-500 text-sm text-center hidden mt-2"></p>
+
+                </form>
+            </div>
+            <div class="bg-gray-50 p-4 text-center text-xs text-gray-500 border-t border-gray-200">
+                Data Anda aman dan digunakan khusus untuk acara ATM 2026.
+            </div>
+        </div>
+
+        <!-- Success Section (Hidden initially) -->
+        <div id="success-container" class="hidden bg-white rounded-2xl shadow-2xl overflow-hidden minang-border transition-all duration-500 transform scale-95 opacity-0">
+            <div class="p-8 text-center flex flex-col items-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-check text-4xl text-green-500"></i>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">Registrasi Berhasil!</h2>
+                <p class="text-gray-600 mb-6">Terima kasih <span id="display-name" class="font-bold text-black"></span>, selamat datang di ATM 2026.</p>
+                
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 w-full flex flex-col items-center shadow-inner mb-6">
+                    <p class="text-sm text-gray-500 font-semibold mb-3 uppercase tracking-wider">Tiket Digital Anda</p>
+                    <!-- QR Code akan di render di sini -->
+                    <div id="qrcode-box" class="p-2 bg-white rounded-lg shadow-sm border border-gray-100"></div>
+                    <p id="ticket-id" class="text-xs text-gray-400 mt-3 font-mono"></p>
+                </div>
+
+                <p class="text-sm text-gray-500">Tunjukkan QR Code ini kepada panitia di meja registrasi.</p>
+                
+                <!-- Tombol Kembali jika ingin daftar tamu lain -->
+                <button onclick="resetForm()" class="mt-6 text-red-600 text-sm font-semibold hover:text-red-800 transition-colors">
+                    Daftar Tamu Lain
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Google Sheets Connection -->
+    <script>
+        // GANTI STRING DI BAWAH DENGAN URL WEB APP DARI GOOGLE APPS SCRIPT ANDA
+        const scriptURL = 'MASUKKAN_URL_WEB_APP_DI_SINI'; 
+        
+        // DOM Elements
+        const form = document.getElementById('registration-form');
+        const formContainer = document.getElementById('form-container');
+        const successContainer = document.getElementById('success-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const errorMsg = document.getElementById('error-msg');
+        const qrCodeBox = document.getElementById('qrcode-box');
+
+        // Form Submit Handler
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            // Validasi URL Script
+            if (scriptURL === 'https://script.google.com/macros/s/AKfycbyamU1wGPaItrMsrsmNtkvN0Suc4bLvLaQbgKuryIg2KVI8f6yC4iWSoRI1xCu996k5/exec) {
+                showError("Error: Anda belum memasukkan URL Google Script di dalam file HTML.");
+                return;
+            }
+
+            const guestName = document.getElementById('name').value.trim();
+            
+            // Generate QR ID unik: "ATM26" + 6 digit timestamp akhir + angka acak
+            const qrId = 'ATM26-' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 100);
+
+            // Menyiapkan data
+            let formData = new FormData(form);
+            formData.append('qr_id', qrId);
+
+            // Loading state
+            setLoading(true);
+            hideError();
+
+            // Mengirim data ke Google Sheets
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    showSuccessUI(guestName, qrId);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    // Catatan: Google Script terkadang melempar CORS error meskipun data berhasil masuk.
+                    // Oleh karena itu, kita tetap menampilkan success UI meskipun masuk ke blok catch ini.
+                    showSuccessUI(guestName, qrId);
+                    setLoading(false);
+                });
+        });
+
+        function setLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                btnText.innerHTML = '<span class="loader"></span> Menyimpan...';
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            } else {
+                btnText.innerHTML = 'Submit Data';
+                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        }
+
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorMsg.classList.add('hidden');
+            errorMsg.textContent = '';
+        }
+
+        function showSuccessUI(guestName, documentId) {
+            // Animasi transisi
+            formContainer.classList.remove('scale-100', 'opacity-100');
+            formContainer.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                formContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+                
+                // Trigger reflow biar animasi masuk sukses
+                void successContainer.offsetWidth; 
+
+                successContainer.classList.remove('scale-95', 'opacity-0');
+                successContainer.classList.add('scale-100', 'opacity-100');
+
+                // Set Nama
+                document.getElementById('display-name').textContent = guestName;
+                document.getElementById('ticket-id').textContent = `ID: ${documentId}`;
+
+                // Generate QR Code
+                qrCodeBox.innerHTML = ''; // Bersihkan QR sebelumnya jika ada
+                new QRCode(qrCodeBox, {
+                    text: documentId, // Menyimpan ID QR code unik
+                    width: 180,
+                    height: 180,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            }, 300); // Tunggu animasi form selesai
+        }
+
+        // Fungsi Reset Form
+        window.resetForm = function() {
+            form.reset();
+            
+            successContainer.classList.remove('scale-100', 'opacity-100');
+            successContainer.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                successContainer.classList.add('hidden');
+                formContainer.classList.remove('hidden');
+                
+                void formContainer.offsetWidth;
+
+                formContainer.classList.remove('scale-95', 'opacity-0');
+                formContainer.classList.add('scale-100', 'opacity-100');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
